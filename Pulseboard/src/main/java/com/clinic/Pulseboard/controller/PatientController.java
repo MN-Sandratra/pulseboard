@@ -12,11 +12,12 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/patients")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PatientController {
-    private final PatientService service;
+    private final PatientService PatientService;
 
     public PatientController(PatientService service){
-        this.service =service;
+        this.PatientService =service;
     }
 
     @GetMapping
@@ -24,23 +25,23 @@ public class PatientController {
             @RequestParam(required = false) String q,
             @PageableDefault(size = 20, sort = "lastName") Pageable pageable
     ) {
-        return service.list(q, pageable);
+        return PatientService.list(q, pageable);
     }
 
     @GetMapping("/{id}")
     public Patient getPatient(@PathVariable Long id){
-        return service.get(id).orElseThrow(()-> new NoSuchElementException("Patient not found"));
+        return PatientService.get(id).orElseThrow(()-> new NoSuchElementException("Patient not found"));
     }
 
     @PostMapping
     public Patient create(@Valid @RequestBody Patient p){
-        return service.save(p);
+        return PatientService.save(p);
     }
 
     @PutMapping("/{id}")
     public Patient updatePatient(@PathVariable Long id, @Valid @RequestBody Patient p){
         Patient existingPatient = getPatient(id);
         p.setId(existingPatient.getId());
-        return service.save(p);
+        return PatientService.save(p);
     }
 }
