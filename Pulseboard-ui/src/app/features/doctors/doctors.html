@@ -1,0 +1,133 @@
+<div class="mx-auto max-w-[1200px] space-y-6">
+  <div class="grid gap-4 md:grid-cols-3">
+    <mat-card
+      class="md:col-span-2 rounded-3xl shadow-[0_10px_30px_rgba(20,30,58,.12)] overflow-hidden text-white bg-gradient-to-r from-[#6E8BFF] to-[#A77DFF]"
+    >
+      <div class="p-6 md:p-8">
+        <div class="opacity-90">Good morning.</div>
+        <div class="mt-1 text-4xl md:text-5xl font-extrabold tracking-tight">Doctors</div>
+        <div class="mt-2 opacity-90">Manage your clinicians</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="rounded-3xl shadow-[0_10px_30px_rgba(20,30,58,.08)]">
+      <div class="p-5">
+        <div class="text-sm text-gray-600">Quick Actions</div>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="mt-4 w-full rounded-full py-3 flex items-center justify-center gap-2"
+          (click)="openCreate()"
+        >
+          <mat-icon>add</mat-icon>
+          <span>New Doctor</span>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- FILTERS + TABLE -->
+  <mat-card class="rounded-3xl shadow-[0_10px_30px_rgba(20,30,58,.08)]">
+    <!-- Filters (Tailwind input pill) -->
+    <div class="p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-3">
+      <div class="relative flex-1">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
+        <input
+          class="w-full pl-11 pr-10 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/30 focus:border-[#6E8BFF] bg-white placeholder:text-gray-400"
+          type="text"
+          [formControl]="q"
+          placeholder="Search by name, specialty or email"
+        />
+        <button
+          class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-2 rounded-full text-sm text-gray-600 hover:bg-gray-100 active:scale-[.98] transition"
+          type="button"
+          (click)="q.setValue(''); reload()"
+        >
+          Clear
+        </button>
+      </div>
+
+      <button
+        mat-stroked-button
+        class="rounded-full px-5 py-3 flex items-center gap-2"
+        (click)="reload()"
+      >
+        <mat-icon>refresh</mat-icon> Refresh
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="px-2 pb-2 md:px-4 md:pb-4">
+      <div class="overflow-hidden rounded-2xl border border-gray-100">
+        <table mat-table [dataSource]="data" class="w-full mat-elevation-z0">
+          <!-- Name (avatar + fullname) -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="th">Name</th>
+            <td mat-cell *matCellDef="let d" class="td">
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  {{ (d.firstName?.[0] || 'D') + (d.lastName?.[0] || '') | uppercase }}
+                </div>
+                <div>
+                  <div class="font-medium">{{ d.firstName }} {{ d.lastName }}</div>
+                  <div class="text-xs text-gray-500">{{ d.email || '—' }}</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Speciality -->
+          <ng-container matColumnDef="speciality">
+            <th mat-header-cell *matHeaderCellDef class="th">Speciality</th>
+            <td mat-cell *matCellDef="let d" class="td">
+              <span class="chip" *ngIf="d.speciality; else none">{{ d.speciality }}</span>
+              <ng-template #none>—</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef class="th">Email</th>
+            <td mat-cell *matCellDef="let d" class="td">{{ d.email || '—' }}</td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="th text-right"></th>
+            <td mat-cell *matCellDef="let d" class="td text-right">
+              <button mat-icon-button (click)="openEdit(d)" class="hover:bg-indigo-50 rounded-full">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="confirmDelete(d)"
+                class="hover:bg-red-50 rounded-full"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="cols" class="thead"></tr>
+          <tr mat-row *matRowDef="let row; columns: cols" class="row"></tr>
+          <tr class="empty" *ngIf="!data?.length">
+            <td [attr.colspan]="cols.length" class="td py-10 text-center text-gray-500">
+              No doctors yet.
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        class="paginator mt-2"
+        [length]="total"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="onPage($event)"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

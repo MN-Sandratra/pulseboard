@@ -1,0 +1,70 @@
+<mat-sidenav-container class="sb-container" autosize>
+  <!-- SIDEBAR -->
+  <mat-sidenav
+    #snav
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+    [fixedInViewport]="isMobile()"
+    [class.sb-rail]="collapsed()"
+    class="sb-sidenav"
+    [style.width.px]="isMobile() ? 300 : collapsed() ? 80 : 288"
+  >
+    <!-- Brand -->
+    <div class="sb-brand" [class.center]="collapsed()">
+      <div class="sb-logo">Pb</div>
+      @if (!collapsed()) {
+      <div class="sb-title">Pulseboard</div>
+      }
+    </div>
+
+    <!-- Nav -->
+    <mat-nav-list class="sb-nav">
+      @for (item of navItems; track $index) {
+      <app-nav-item
+        [icon]="item.icon"
+        [label]="item.label"
+        [route]="item.route"
+        [collapsed]="collapsed()"
+      />
+      }
+    </mat-nav-list>
+
+    <!-- Footer -->
+    <div class="sb-footer">
+      @if (!collapsed()) {
+      <div class="sb-meta">v0.1 · made with ♥</div>
+      }
+    </div>
+
+    <!-- Handle (à l’intérieur, positionné en absolu) -->
+    <button
+      mat-fab
+      class="sb-handle"
+      (click)="toggleCollapse()"
+      [matTooltip]="collapsed() ? 'Expand' : 'Collapse'"
+      aria-label="Toggle sidebar"
+    >
+      <mat-icon>{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+    </button>
+  </mat-sidenav>
+
+  <!-- MAIN -->
+  <mat-sidenav-content class="sb-content">
+    <mat-toolbar class="sb-topbar">
+      <button mat-icon-button class="only-mobile" (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="sb-topbar-title">Dashboard</span>
+      <span class="flex-1"></span>
+      <button mat-icon-button class="sb-topbar-btn"><mat-icon>notifications</mat-icon></button>
+      <button mat-icon-button class="sb-topbar-btn"><mat-icon>account_circle</mat-icon></button>
+    </mat-toolbar>
+
+    <div class="sb-page max-w-[1200px]">
+      <div class="sb-card container">
+        <router-outlet />
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
