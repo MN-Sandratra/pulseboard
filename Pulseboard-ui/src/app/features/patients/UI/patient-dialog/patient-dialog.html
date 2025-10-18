@@ -1,0 +1,111 @@
+<div class="p-6 rounded-lg max-w-xl mx-auto pt-9">
+  <h2 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-3">
+    {{
+      data.mode === 'create' ? 'Ajouter un nouveau patient' : 'Modifier les informations du patient'
+    }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid gap-5">
+    <!-- Prénom et Nom sur une seule ligne sur grand écran -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Champ Prénom -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Prénom</mat-label>
+        <input matInput formControlName="firstName" required class="text-gray-700" />
+        <span matPrefix class="text-gray-500 mr-2 flex items-center">
+          <mat-icon>person</mat-icon>
+        </span>
+        <mat-error *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched">
+          Le prénom est requis.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Champ Nom de famille -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Nom de famille</mat-label>
+        <input matInput formControlName="lastName" required class="text-gray-700" />
+        <span matPrefix class="text-gray-500 mr-2 flex items-center">
+          <mat-icon>account_circle</mat-icon>
+        </span>
+        <mat-error *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched">
+          Le nom est requis.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Date de Naissance et Téléphone sur une seule ligne sur grand écran -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Champ Date de Naissance -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Date de Naissance</mat-label>
+        <input matInput type="date" formControlName="birthDate" class="text-gray-700" />
+        <span matPrefix class="text-gray-500 mr-2 flex items-center">
+          <mat-icon>cake</mat-icon>
+        </span>
+      </mat-form-field>
+
+      <!-- Champ Téléphone -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Téléphone</mat-label>
+        <input matInput formControlName="phone" class="text-gray-700" />
+        <span matPrefix class="text-gray-500 mr-2 flex items-center">
+          <mat-icon>phone</mat-icon>
+        </span>
+        <mat-error *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
+          Format de téléphone invalide.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Champ Numéro d'Assurance Sociale (socialId) -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Numéro d'Assurance Sociale (Social ID)</mat-label>
+      <input matInput formControlName="socialId" class="text-gray-700" />
+      <span matPrefix class="text-gray-500 mr-2 flex items-center">
+        <mat-icon>fingerprint</mat-icon>
+      </span>
+      <mat-hint>Identifiant unique du patient.</mat-hint>
+    </mat-form-field>
+
+    <!-- Champ Email -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" class="text-gray-700" />
+      <span matPrefix class="text-gray-500 mr-2 flex items-center">
+        <mat-icon>email</mat-icon>
+      </span>
+      <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        Format d'email invalide.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Champ Adresse -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Adresse Complète</mat-label>
+      <textarea matInput formControlName="address" rows="2" class="text-gray-700"></textarea>
+      <span matPrefix class="text-gray-500 mr-2 flex items-center self-start pt-3">
+        <mat-icon>location_on</mat-icon>
+      </span>
+    </mat-form-field>
+
+    <!-- Conteneur des actions -->
+    <div class="flex justify-end gap-3 pt-4 border-t mt-2">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="close()"
+        class="hover:bg-gray-100 transition duration-150"
+      >
+        Annuler
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+        class="bg-[#6E8BFF] hover:bg-[#5A77E0] transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50"
+      >
+        {{ data.mode === 'create' ? 'Créer le patient' : 'Sauvegarder' }}
+      </button>
+    </div>
+  </form>
+</div>

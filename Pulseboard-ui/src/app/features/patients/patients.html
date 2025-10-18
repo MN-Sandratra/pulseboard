@@ -5,8 +5,8 @@
     >
       <div class="p-6 md:p-8">
         <div class="opacity-90">Good morning.</div>
-        <div class="mt-1 text-4xl md:text-5xl font-extrabold tracking-tight">Doctors</div>
-        <div class="mt-2 opacity-90">Manage your clinicians</div>
+        <div class="mt-1 text-4xl md:text-5xl font-extrabold tracking-tight">Patients</div>
+        <div class="mt-2 opacity-90">Manage patient records and demographics.</div>
       </div>
     </mat-card>
 
@@ -20,7 +20,7 @@
           (click)="openCreate()"
         >
           <mat-icon>person_add</mat-icon>
-          <span>New Doctor</span>
+          <span>New Patient</span>
         </button>
       </div>
     </mat-card>
@@ -36,7 +36,7 @@
           class="w-full pl-11 pr-10 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6E8BFF]/30 focus:border-[#6E8BFF] bg-white placeholder:text-gray-400"
           type="text"
           [formControl]="q"
-          placeholder="Search by name, specialty or email"
+          placeholder="Search by name, Social ID, or email"
         />
         <button
           class="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-2 rounded-full text-sm text-gray-600 hover:bg-gray-100 active:scale-[.98] transition"
@@ -62,33 +62,42 @@
         <table mat-table [dataSource]="data" class="w-full mat-elevation-z0">
           <!-- Name (avatar + fullname) -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef class="th">Name</th>
+            <th mat-header-cell *matHeaderCellDef class="th">Patient</th>
             <td mat-cell *matCellDef="let d" class="td">
               <div class="flex items-center gap-3">
                 <div class="avatar">
-                  {{ (d.firstName?.[0] || 'D') + (d.lastName?.[0] || '') | uppercase }}
+                  {{ (d.firstName?.[0] || 'P') + (d.lastName?.[0] || '') | uppercase }}
                 </div>
                 <div>
                   <div class="font-medium">{{ d.firstName }} {{ d.lastName }}</div>
-                  <div class="text-xs text-gray-500">{{ d.email || '—' }}</div>
                 </div>
               </div>
             </td>
           </ng-container>
 
-          <!-- Speciality -->
-          <ng-container matColumnDef="speciality">
-            <th mat-header-cell *matHeaderCellDef class="th">Speciality</th>
+          <!-- Social ID -->
+          <ng-container matColumnDef="socialId">
+            <th mat-header-cell *matHeaderCellDef class="th">Social ID</th>
             <td mat-cell *matCellDef="let d" class="td">
-              <span class="chip" *ngIf="d.speciality; else none">{{ d.speciality }}</span>
-              <ng-template #none>—</ng-template>
+              <span class="chip" *ngIf="d.socialId; else noneSocial">{{ d.socialId }}</span>
+              <ng-template #noneSocial>—</ng-template>
             </td>
           </ng-container>
 
-          <!-- Email -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef class="th">Email</th>
-            <td mat-cell *matCellDef="let d" class="td">{{ d.email || '—' }}</td>
+          <!-- Birth Date -->
+          <ng-container matColumnDef="birthDate">
+            <th mat-header-cell *matHeaderCellDef class="th">Birth Date</th>
+            <td mat-cell *matCellDef="let d" class="td">
+              {{ d.birthDate | date }}
+            </td>
+          </ng-container>
+
+          <!-- Phone -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef class="th">Phone</th>
+            <td mat-cell *matCellDef="let d" class="td">
+              {{ d.phone || '—' }}
+            </td>
           </ng-container>
 
           <!-- Actions -->
@@ -109,12 +118,14 @@
             </td>
           </ng-container>
 
+          <!-- CRITICAL: Make sure 'cols' in your TypeScript component is updated to: 
+               cols = ['name', 'socialId', 'birthDate', 'phone', 'actions']; -->
           <tr mat-header-row *matHeaderRowDef="cols" class="thead"></tr>
           <tr mat-row *matRowDef="let row; columns: cols" class="row"></tr>
           @if (!data.length) {
           <tr class="empty">
             <td [attr.colspan]="cols.length" class="td py-10 text-center text-gray-500">
-              No doctors yet.
+              No patients found.
             </td>
           </tr>
           }
