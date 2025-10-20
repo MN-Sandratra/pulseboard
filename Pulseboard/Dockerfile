@@ -1,11 +1,11 @@
 # Build stage
-FROM eclipse-temurin:17-jdk-jammy AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /app
-COPY Pulseboard/.mvn .mvn
+
 COPY Pulseboard/mvnw Pulseboard/pom.xml ./
 
 RUN chmod +x mvnw
-
+COPY Pulseboard/.mvn .mvn
 COPY Pulseboard/src src
 
 RUN ./mvnw -DskipTests package
