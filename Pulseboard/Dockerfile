@@ -3,9 +3,11 @@ FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 COPY Pulseboard/.mvn .mvn
 COPY Pulseboard/mvnw Pulseboard/pom.xml ./
-COPY Pulseboard/src src
 
 RUN chmod +x mvnw
+
+COPY Pulseboard/src src
+
 RUN ./mvnw -DskipTests package
 
 # Run stage
