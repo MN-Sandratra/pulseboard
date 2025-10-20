@@ -4,6 +4,8 @@ WORKDIR /app
 COPY Pulseboard/.mvn .mvn
 COPY Pulseboard/mvnw Pulseboard/pom.xml ./
 COPY Pulseboard/src src
+
+RUN chmod +x mvnw
 RUN ./mvnw -DskipTests package
 
 # Run stage
