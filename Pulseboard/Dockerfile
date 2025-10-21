@@ -11,7 +11,7 @@ COPY Pulseboard/src src
 RUN ./mvnw -DskipTests package
 
 # Run stage
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 # Tell Render / platform to use $PORT (default 8080)
