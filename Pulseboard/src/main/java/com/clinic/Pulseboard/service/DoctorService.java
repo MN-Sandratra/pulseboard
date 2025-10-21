@@ -17,7 +17,7 @@ public class DoctorService {
     private final DoctorRepository doctorRepository;
 
     public Page<Doctor> list(String q, Pageable p) {
-        return (q == null || q.isBlank()) ? doctorRepository.findAll(p) : doctorRepository.findByLastNameContainingIgnoreCase(q, p);
+        return (q == null || q.isBlank()) ? doctorRepository.findAll(p) : doctorRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(q, p);
     }
 
     public Doctor save(Doctor d) {
